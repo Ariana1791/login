@@ -6,7 +6,7 @@ import com.mx.login.model.Login;
 
 public interface LoginInterfaceRepository  extends JpaRepository<Login, Integer>{
 
-    Login findByUsuario(String usuario);
+    Login findByUsuario(String  usuario);
 
-
+    
 }

@@ -11,4 +11,8 @@ public interface LoginInterfaceService {
     Login actualizarLogin(Login login, int idLogin);
 
     void eliminarLogin(int idLogin);
+
+    boolean buscarPorId(int id);
+
+    Login buscarPorUsuario(String  usuario);
 }

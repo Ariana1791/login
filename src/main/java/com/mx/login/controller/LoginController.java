@@ -1,9 +1,12 @@
 package com.mx.login.controller;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,48 +25,45 @@ public class LoginController {
     @Autowired
     LoginInterfaceService service;
     @PostMapping(value = "/crearLogin")
-    public Login crearLogin(@RequestBody Login login) {
-        Login crear = null;
-        try {
-            crear = service.crearLogin(login);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-
+    public ResponseEntity<?> crearLogin(@RequestBody Login login) {
+        Login recuperado = service.buscarPorUsuario(login.getUsuario());
+        if(recuperado == null){
+            service.crearLogin(login);
+            System.out.println( login.toString());       
+        return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("exito","el usuario se a guardado correctamente"));
         }
-
-        return crear;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error","el usuario ya se encuentra registrado"));
     }
-
-    @GetMapping(value = "/buscarLogin")
-    public Login buscarLogin(@RequestBody Login login) {
-        Login buscar = null;
-        try {
-            buscar = service.buscarLogin(login);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return buscar;
+    
+    @PostMapping(value = "/buscarLogin")
+    public ResponseEntity<?> buscarLogin(@RequestBody Login login) {
+            Login buscar = service.buscarLogin(login);
+            if (buscar != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(buscar);     
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error","usuario no encontrado"));
     }
 
     @PutMapping(value = "actualizarLogin/{idLogin}")
-    public Login actualizarLogin(@RequestBody Login login, @PathVariable int idLogin) {
-        Login actualizar = null;
-        try {
-            actualizar = service.actualizarLogin(login, idLogin);
-            
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    public ResponseEntity<?> actualizarLogin(@RequestBody Login login, @PathVariable int idLogin) {
+        boolean recuperado = service.buscarPorId(idLogin);
+        if(recuperado == true){
+             service.actualizarLogin(login, idLogin);
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("exito","el usuario se a actualizado correctamente"));
         }
-        return actualizar;
-
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error","usuario no encontrado"));
     }
+
+    
 
     @DeleteMapping(value = "/eliminarLogin/{idLogin}")
-    public void eliminarLogin(@PathVariable int idLogin) {
-        try {
-            service.eliminarLogin(idLogin);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+    public ResponseEntity<?> eliminarLogin(@PathVariable int idLogin) {
+        boolean recuperado = service.buscarPorId(idLogin);
+        if(recuperado == true){
+             service.eliminarLogin(idLogin);
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("exito","el usuario se a eliminado correctamente"));
         }
+         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error","usuario no encontrado"));
     }
 }
+    

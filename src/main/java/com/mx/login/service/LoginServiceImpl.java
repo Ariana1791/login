@@ -23,6 +23,7 @@ public class LoginServiceImpl implements  LoginInterfaceService{
         }
          return result;
     }
+    
 
     @Override
     public Login buscarLogin(Login login) {
@@ -74,5 +75,27 @@ public class LoginServiceImpl implements  LoginInterfaceService{
         }
 
 }
+
+    @Override 
+    public boolean buscarPorId(int id){
+            boolean recuperado = false; 
+        try {
+         recuperado = repository.existsById(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return  recuperado;
+    }
+
+    @Override
+    public Login buscarPorUsuario(String  usuario) {
+       Login recuperado = null; 
+        try {
+         recuperado = repository.findByUsuario(usuario);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return  recuperado;
+    }
 
 }

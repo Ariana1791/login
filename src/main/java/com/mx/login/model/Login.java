@@ -2,6 +2,8 @@ package com.mx.login.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -10,6 +12,7 @@ import jakarta.persistence.Table;
 public class Login {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id_login")
     private int idLogin;
     @Column(name = "usuario")
@@ -84,5 +87,13 @@ public class Login {
     public void setNombreLogin(String nombreLogin) {
         this.nombreLogin = nombreLogin;
     }
+
+
+    @Override
+    public String toString() {
+        return "Login [El usuario es:" + usuario + ",El password es:" + password + "]";
+    }
+
+    
 
 }
